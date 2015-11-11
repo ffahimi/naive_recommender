@@ -13,7 +13,7 @@ class MYModel:
     def trainBatch(self, train_data):
         self.classifier.train(train_data)
         print('... Pickling the model')
-        DataHandling.store_data(Constants.model_path + 'classifier_NB.pickle', train_data)
+        DataHandling.store_data(Constants.model_path + 'classifier_NB.pickle', self.classifier)
 
     def crossfoldValidation(self, train_data, number_of_folds):
         return self.classifier.classification_CV(train_data, number_of_folds)
@@ -28,7 +28,10 @@ class MYModel:
         """
         pass
 
-    def predict(self, train_data):
+    def predict(self, train_data, load_classifier=False):
+        if load_classifier:
+            self.classifier = DataHandling.load_data(Constants.model_path + 'classifier_NB.pickle')
+
         return self.classifier.classification(train_data)
 
 
