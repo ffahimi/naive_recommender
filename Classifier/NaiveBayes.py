@@ -16,7 +16,7 @@ class NaiveBayes:
         features = []
         classes = []
         for index, entry in training_set.iterrows():
-            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']])
             classes.append(entry['Output'])
 
         print('... Training the model')
@@ -27,7 +27,18 @@ class NaiveBayes:
         features = []
 
         for index, entry in train_data.iterrows():
-            features.append(np.array(entry[['Osfamily', 'Publisher', 'ArticleDistance']]))
+            features.append(np.array(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']]))
+
+        print('... Started classification')
+        results_prob = self.classifier.predict(features)
+        return results_prob
+
+    def predict_prob(self, train_data):
+
+        features = []
+
+        for index, entry in train_data.iterrows():
+            features.append(np.array(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']]))
 
         print('... Started classification')
         results_prob = self.classifier.predict_proba(features)
@@ -37,7 +48,7 @@ class NaiveBayes:
 
         features = []
         for index, entry in train_data.iterrows():
-            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']])
 
         print('... Started crossfold validation')
         score = cross_validation.cross_val_score(self.classifier, features, train_data.Output, cv=number_of_folds,

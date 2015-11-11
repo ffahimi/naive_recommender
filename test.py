@@ -39,7 +39,9 @@ print(scores)
 
 #Prediction of Probabilities using Model (If needed to be used online, a threshold is needed)
 predictions = model.predict(train_data)
-DataHandling.store_data(Constants.model_path + 'predictions_prob.pickle', predictions)
+print(predictions)
+DataHandling.store_data(Constants.model_path + 'predictions.pickle', predictions)
+
 
 # print DataHandling.load_data(Constants.model_path + 'predictions_prob.pickle')
 
