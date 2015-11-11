@@ -35,7 +35,7 @@ model.trainBatch(train_data)
 
 #Cross-fold validation of training model
 scores = model.crossfoldValidation(train_data, 10)
-
+print(scores)
 
 #Prediction of Probabilities using Model (If needed to be used online, a threshold is needed)
 predictions = model.predict(train_data)
