@@ -3,7 +3,6 @@ from datetime import datetime
 
 from sklearn import cross_validation
 from sklearn.naive_bayes import MultinomialNB
-import numpy as np
 
 
 class NaiveBayes:
@@ -16,7 +15,9 @@ class NaiveBayes:
         features = []
         classes = []
         for index, entry in training_set.iterrows():
-            features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']])
+            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            # This is for when article popularity is known
+            # features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance', 'ArticlePopularity']])
             classes.append(entry['Output'])
 
         print('... Training the model')
@@ -27,8 +28,9 @@ class NaiveBayes:
         features = []
 
         for index, entry in train_data.iterrows():
-            features.append(np.array(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']]))
-
+            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            # This is for when article popularity is known
+            # features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance', 'ArticlePopularity']])
         print('... Started classification')
         results_prob = self.classifier.predict(features)
         return results_prob
@@ -38,9 +40,21 @@ class NaiveBayes:
         features = []
 
         for index, entry in train_data.iterrows():
-            features.append(np.array(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']]))
+            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            # This is for when article popularity is known
+            # features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance', 'ArticlePopularity']])
 
         print('... Started classification')
+        results_prob = self.classifier.predict_proba(features)
+        return results_prob
+
+    def series_predict_prob(self, data):
+
+        features = []
+        features.append(data[['Osfamily', 'Publisher', 'ArticleDistance']])
+        # This is for when article popularity is known
+        # features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance', 'ArticlePopularity']])
+
         results_prob = self.classifier.predict_proba(features)
         return results_prob
 
@@ -48,7 +62,9 @@ class NaiveBayes:
 
         features = []
         for index, entry in train_data.iterrows():
-            features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance']])
+            features.append(entry[['Osfamily', 'Publisher', 'ArticleDistance']])
+            # This is for when article popularity is known
+            # features.append(entry[['UserClicksAd', 'Osfamily', 'Publisher', 'ArticleDistance', 'ArticlePopularity']])
 
         print('... Started crossfold validation')
         score = cross_validation.cross_val_score(self.classifier, features, train_data.Output, cv=number_of_folds,

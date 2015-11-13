@@ -39,6 +39,8 @@ publisher_list = DataHandling.load_data(Constants.model_path + 'publisher_list.p
 #In case there is a new termVectors file we use this to extract features, I assume it is because articles will be updated.
 feature_extraction = FeatureExtraction()
 [article_word_count, word_tfidf, publishers, article_numbers] = feature_extraction.prepare_dictionary_article(termVectors)
+# #For testing train data the same as test data
+testData = train_data
 
 article_popularity = DataHandling.load_data(Constants.model_path + 'article_popularity.pickle')
 train_data = DataHandling.load_data(Constants.model_path + 'train_data_with_article_distances.pickle')
@@ -68,14 +70,20 @@ for (rowNum, row) in testData.iterrows():
         distance_df = distance_df.abs().values.dot(word_tfidf)
         distance_array = np.reshape(distance_df, [len(distance_df), 1])
 
-        best_distance = 1000
+        best_match_probability = 0
         best_article_index = 0
         for i in xrange(len(distance_array)):
             if str(publishers[i]) != str(int(inputFeatures['Publisher'])):
-                if distance_array[i] < best_distance:
-                    best_distance = distance_array[i]
+                inputFeatures["ArticleDistance"] = distance_array[i]
+                inputFeatures["Publisher"] = feature_extraction.get_publisher_feature(inputFeatures["Publisher"], publisher_list)
+                inputFeatures["Osfamily"] = feature_extraction.get_os_feature(inputFeatures["Osfamily"], os_list)
+
+
+                current_match_probability = model.series_predict_prob(inputFeatures)
+
+                if current_match_probability[0][1] > best_match_probability:
+                    best_match_probability = current_match_probability[0][1]
                     best_article_index = [i]
-                    print(best_distance)
 
         recommended_article_number = article_numbers[i]
 

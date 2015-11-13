@@ -8,7 +8,8 @@ from Configuration.Constants import Constants
 class MYModel:
 
     def __init__(self):
-        self.classifier = NaiveBayes(0.2)
+        self.classifier = NaiveBayes(0.8)
+        # self.classifier = LogitRegression()
 
     def trainBatch(self, train_data):
         self.classifier.train(train_data)
@@ -28,18 +29,20 @@ class MYModel:
         """
         pass
 
-    def predict(self, train_data, load_classifier=False):
+    def predict(self, data, load_classifier=False):
         if load_classifier:
             self.classifier = DataHandling.load_data(Constants.model_path + 'classifier_NB.pickle')
 
-        return self.classifier.classification(train_data)
+        return self.classifier.classification(data)
 
-    def predict_prob(self, train_data, load_classifier=False):
+    def predict_prob(self, data, load_classifier=False):
         if load_classifier:
             self.classifier = DataHandling.load_data(Constants.model_path + 'classifier_NB.pickle')
 
-        return self.classifier.predict_prob(train_data)
+        return self.classifier.predict_prob(data)
 
+    def series_predict_prob(self, data):
+        return self.classifier.series_predict_prob(data)
 
 
         """
